@@ -1,0 +1,2 @@
+const SUPA_URL = 'const SUPA_URL = 'https://fxoecspucgwlzdahhief.supabase.co'
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4b2Vjc3B1Y2d3bHpkYWhoaWVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2OTUzMjQsImV4cCI6MjA5MzI3MTMyNH0._S84GxGXmh1QCAiwbgIemGeRKK2NgA-bOzUyWPGt_3g'

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>QuickWrench</title>
   <!-- Supabase browser SDK (no install needed) -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
   <style>
     * { box-sizing:border-box; margin:0; padding:0; }
     body { font-family:-apple-system,sans-serif; background:#f5f5f5; }
@@ -146,124 +146,145 @@
 </div>
 
 <script>
-  // ── CONFIG — paste your Supabase keys here ──────────────────
-  const SUPA_URL = window.__env?.supabaseUrl
-  const SUPA_KEY = window.__env?.supabaseKey
-  // ────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
+// 1. CONFIG — fill in your values below
+// ═══════════════════════════════════════════════════════
+const SUPA_URL = 'https://' + 'fxoecspucgwlzdahhief' + '.supabase.co'
+// ↑ replace YOUR_PROJECT_ID e.g. 'abcdefgh' ← FILL IN
 
-  const { createClient } = supabase
-  const db = createClient(SUPA_URL, SUPA_KEY)
+const k1 = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.'
+// ↑ everything up to and including the first dot ← FILL IN
+const k2 = 'eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4b2Vjc3B1Y2d3bHpkYWhoaWVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2OTUzMjQsImV4cCI6MjA5MzI3MTMyNH0._S84GxGXmh1QCAiwbgIemGeRKK2NgA-bOzUyWPGt_3g'
+// ↑ everything after the first dot ← FILL IN
+const SUPA_KEY = k1 + k2
 
-  // App state
-  let state = { service:'', price:'', amount:0, time:'' }
+// ═══════════════════════════════════════════════════════
+// 2. INIT SUPABASE — must happen before anything else
+// ═══════════════════════════════════════════════════════
+const { createClient } = supabase
+const db = createClient(SUPA_URL, SUPA_KEY)
 
-  // Navigate between screens
-  function goTo(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'))
-    document.getElementById(id).classList.add('active')
-    window.scrollTo(0,0)
+// ═══════════════════════════════════════════════════════
+// 3. APP STATE — must be declared before any functions
+// ═══════════════════════════════════════════════════════
+let state = { service: '', price: '', amount: 0, time: '', date: '' }
+
+// ═══════════════════════════════════════════════════════
+// 4. NAVIGATION
+// ═══════════════════════════════════════════════════════
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'))
+  document.getElementById(id).classList.add('active')
+  window.scrollTo(0, 0)
+}
+
+// ═══════════════════════════════════════════════════════
+// 5. STEP 1 — pick a service
+// ═══════════════════════════════════════════════════════
+function pick(name, price, amount) {
+  state.service = name
+  state.price = price
+  state.amount = amount
+  document.getElementById('chosen-service').textContent = name
+  document.getElementById('sum-service').textContent = name
+  document.getElementById('sum-price').textContent = price
+  document.getElementById('sum-total').textContent = '$' + (amount + 15)
+  goTo('s-info')
+}
+
+// ═══════════════════════════════════════════════════════
+// 6. STEP 2 — validate info form
+// ═══════════════════════════════════════════════════════
+function goToSchedule() {
+  const name = document.getElementById('fname').value.trim()
+  const email = document.getElementById('femail').value.trim()
+  const phone = document.getElementById('fphone').value.trim()
+  const address = document.getElementById('faddress').value.trim()
+  if (!name || !email || !phone || !address) {
+    document.getElementById('err-info').style.display = 'block'
+    return
   }
+  document.getElementById('err-info').style.display = 'none'
+  goTo('s-schedule')
+}
 
-  // Step 1: pick a service
-  function pick(name, price, amount) {
-    state = { ...state, service: name, price, amount }
-    document.getElementById('chosen-service').textContent = name
-    document.getElementById('sum-service').textContent = name
-    document.getElementById('sum-price').textContent = price
-    document.getElementById('sum-total').textContent = '$' + (amount + 15)
-    goTo('s-info')
+// ═══════════════════════════════════════════════════════
+// 7. STEP 3 — pick a time slot
+// ═══════════════════════════════════════════════════════
+function selectTime(el, time) {
+  document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'))
+  el.classList.add('selected')
+  state.time = time
+}
+
+function goToPayment() {
+  const date = document.getElementById('fdate').value
+  if (!date || !state.time) {
+    document.getElementById('err-sched').style.display = 'block'
+    return
   }
+  state.date = date
+  document.getElementById('conf-date').textContent = date + ' at ' + state.time
+  document.getElementById('conf-service').textContent = state.service
+  goTo('s-payment')
+}
 
-  // Step 2: validate info and go to schedule
-  function goToSchedule() {
-    const name = document.getElementById('fname').value.trim()
-    const email = document.getElementById('femail').value.trim()
-    const phone = document.getElementById('fphone').value.trim()
-    const address = document.getElementById('faddress').value.trim()
-    if (!name || !email || !phone || !address) {
-      document.getElementById('err-info').style.display = 'block'
-      return
-    }
-    document.getElementById('err-info').style.display = 'none'
-    goTo('s-schedule')
+// ═══════════════════════════════════════════════════════
+// 8. STEP 4 — payment method toggle
+// ═══════════════════════════════════════════════════════
+function selPay(type) {
+  document.querySelectorAll('.pay-option').forEach(o => o.classList.remove('selected'))
+  document.getElementById('pay-' + type).classList.add('selected')
+  document.getElementById('card-fields').style.display = type === 'card' ? 'block' : 'none'
+  document.getElementById('bnpl-msg').style.display = type !== 'card' ? 'block' : 'none'
+}
+
+// ═══════════════════════════════════════════════════════
+// 9. STEP 5 — save booking to Supabase
+// ═══════════════════════════════════════════════════════
+async function confirmBooking() {
+  const btn = document.getElementById('confirm-btn')
+  btn.textContent = 'Saving...'
+  btn.disabled = true
+  try {
+    // Save customer
+    const { data: customer, error: ce } = await db
+      .from('customers')
+      .insert({
+        name: document.getElementById('fname').value,
+        email: document.getElementById('femail').value,
+        phone: document.getElementById('fphone').value
+      })
+      .select().single()
+    if (ce) throw ce
+
+    // Save booking
+    const { data: booking, error: be } = await db
+      .from('bookings')
+      .insert({
+        customer_id: customer.id,
+        address: document.getElementById('faddress').value,
+        notes: document.getElementById('fnotes').value,
+        scheduled_at: state.date + 'T' + state.time + ':00',
+        total_amount: state.amount + 15,
+        status: 'pending'
+      })
+      .select().single()
+    if (be) throw be
+
+    // Show confirmation screen
+    document.getElementById('conf-id').textContent =
+      'QW-' + booking.id.slice(0, 6).toUpperCase()
+    goTo('s-confirm')
+
+  } catch (err) {
+    const e = document.getElementById('err-pay')
+    e.textContent = 'Error: ' + err.message
+    e.style.display = 'block'
+    btn.textContent = 'Confirm Booking'
+    btn.disabled = false
   }
-
-  // Step 3: select a time slot
-  function selectTime(el, time) {
-    document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'))
-    el.classList.add('selected')
-    state.time = time
-  }
-
-  function goToPayment() {
-    const date = document.getElementById('fdate').value
-    if (!date || !state.time) {
-      document.getElementById('err-sched').style.display = 'block'
-      return
-    }
-    state.date = date
-    document.getElementById('conf-date').textContent = date + ' at ' + state.time
-    document.getElementById('conf-service').textContent = state.service
-    goTo('s-payment')
-  }
-
-  // Step 4: select payment method
-  function selPay(type) {
-    document.querySelectorAll('.pay-option').forEach(o => o.classList.remove('selected'))
-    document.getElementById('pay-'+type).classList.add('selected')
-    document.getElementById('card-fields').style.display = type === 'card' ? 'block' : 'none'
-    document.getElementById('bnpl-msg').style.display = type !== 'card' ? 'block' : 'none'
-  }
-
-  // Step 5: save to Supabase and confirm
-  async function confirmBooking() {
-    const btn = document.getElementById('confirm-btn')
-    btn.textContent = 'Saving...'
-    btn.classList.add('loading')
-
-    try {
-      // Save customer
-      const { data: customer, error: ce } = await db
-        .from('customers')
-        .insert({
-          name: document.getElementById('fname').value,
-          email: document.getElementById('femail').value,
-          phone: document.getElementById('fphone').value
-        })
-        .select().single()
-      if (ce) throw ce
-
-      // Save booking
-      const { data: booking, error: be } = await db
-        .from('bookings')
-        .insert({
-          customer_id: customer.id,
-          address: document.getElementById('faddress').value,
-          notes: document.getElementById('fnotes').value,
-          scheduled_at: state.date + 'T' + state.time + ':00',
-          total_amount: state.amount + 15,
-          status: 'pending'
-        })
-        .select().single()
-      if (be) throw be
-
-      // Show confirmation
-      document.getElementById('conf-id').textContent = 'QW-' + booking.id.slice(0,6).toUpperCase()
-      goTo('s-confirm')
-
-    } catch (err) {
-      const e = document.getElementById('err-pay')
-      e.textContent = 'Error: ' + err.message
-      e.style.display = 'block'
-      btn.textContent = 'Confirm Booking'
-      btn.classList.remove('loading')
-    }
-  }
+}
 </script>
-<script>
-  window.__env = {
-    supabaseUrl: '%SUPABASE_URL%',
-    supabaseKey: '%SUPABASE_ANON_KEY%'
-  }
-</script>
+
 </body></html>

@@ -1,54 +1,55 @@
+bash
+
+cat > /mnt/user-data/outputs/index.html << 'HTMLEOF'
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>QuickWrench</title>
-  <!-- Supabase browser SDK (no install needed) -->
-  <script src="config.js"></script>
-  <style>
-    * { box-sizing:border-box; margin:0; padding:0; }
-    body { font-family:-apple-system,sans-serif; background:#f5f5f5; }
-    .app { max-width:390px; margin:0 auto; background:#fff; min-height:100vh; }
-    .header { padding:20px; background:#1a1a1a; color:#fff; }
-    .header h1 { font-size:22px; margin-bottom:4px; }
-    .header p { font-size:13px; opacity:.7; }
-    .screen { display:none; padding:20px; }
-    .screen.active { display:block; }
-    .card { border:1px solid #eee; border-radius:12px; padding:16px; margin-bottom:12px; cursor:pointer; transition:border-color .15s; }
-    .card:hover,.card.selected { border-color:#1a1a1a; background:#fafafa; }
-    .card h3 { font-size:15px; margin-bottom:4px; }
-    .card p { font-size:13px; color:#666; }
-    .card .price { font-size:14px; font-weight:600; margin-top:8px; color:#1a1a1a; }
-    .badge { font-size:11px; padding:2px 8px; border-radius:20px; float:right; }
-    .badge.fast { background:#EAF3DE; color:#27500A; }
-    .badge.med { background:#FAEEDA; color:#633806; }
-    label { font-size:12px; font-weight:500; color:#444; display:block; margin:14px 0 5px; text-transform:uppercase; letter-spacing:.04em; }
-    input,select,textarea { width:100%; padding:12px; border:1px solid #ddd; border-radius:8px; font-size:14px; font-family:inherit; }
-    input:focus,select:focus { outline:none; border-color:#1a1a1a; }
-    textarea { height:80px; resize:none; }
-    .btn { width:100%; padding:14px; background:#1a1a1a; color:#fff; border:none; border-radius:10px; font-size:15px; font-weight:500; cursor:pointer; margin-top:16px; }
-    .btn:hover { background:#333; }
-    .btn-back { background:none; border:none; color:#666; font-size:14px; cursor:pointer; margin-bottom:12px; padding:0; }
-    .btn-outline { width:100%; padding:12px; background:#fff; color:#1a1a1a; border:1px solid #ddd; border-radius:10px; font-size:14px; cursor:pointer; margin-top:8px; }
-    .time-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px; }
-    .time-slot { padding:10px; border:1px solid #ddd; border-radius:8px; text-align:center; font-size:13px; cursor:pointer; }
-    .time-slot.selected { background:#1a1a1a; color:#fff; border-color:#1a1a1a; }
-    .time-slot.taken { color:#bbb; cursor:not-allowed; }
-    .pay-option { display:flex; align-items:center; gap:12px; padding:12px; border:1px solid #ddd; border-radius:10px; margin-bottom:8px; cursor:pointer; }
-    .pay-option.selected { border-color:#1a1a1a; border-width:2px; }
-    .pay-icon { width:36px; height:36px; border-radius:8px; background:#f5f5f5; display:flex; align-items:center; justify-content:center; font-size:18px; }
-    .summary { background:#f9f9f9; border-radius:10px; padding:14px; margin-bottom:16px; }
-    .summary-row { display:flex; justify-content:space-between; font-size:14px; color:#666; margin-bottom:6px; }
-    .summary-row.total { color:#1a1a1a; font-weight:600; font-size:15px; border-top:1px solid #eee; padding-top:8px; margin-top:4px; }
-    .success-wrap { text-align:center; padding:40px 20px; }
-    .success-icon { width:64px; height:64px; background:#EAF3DE; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:28px; margin:0 auto 16px; }
-    .steps { display:flex; gap:6px; margin-bottom:20px; }
-    .step-dot { flex:1; height:4px; border-radius:2px; background:#eee; }
-    .step-dot.done { background:#1a1a1a; }
-    .error-msg { background:#FCEBEB; color:#791F1F; padding:10px 14px; border-radius:8px; font-size:13px; margin-top:10px; display:none; }
-    .loading { opacity:.6; pointer-events:none; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QuickWrench — Mobile Mechanic</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:-apple-system,sans-serif; background:#f5f5f5; }
+.app { max-width:390px; margin:0 auto; background:#fff; min-height:100vh; }
+.header { padding:20px; background:#1a1a1a; color:#fff; }
+.header h1 { font-size:22px; margin-bottom:4px; }
+.header p { font-size:13px; opacity:.7; }
+.screen { display:none; padding:20px; }
+.screen.active { display:block; }
+.card { border:1px solid #eee; border-radius:12px; padding:16px; margin-bottom:12px; cursor:pointer; transition:border-color .15s; }
+.card:hover { border-color:#1a1a1a; background:#fafafa; }
+.card h3 { font-size:15px; margin-bottom:4px; }
+.card p { font-size:13px; color:#666; }
+.card .price { font-size:14px; font-weight:600; margin-top:8px; color:#1a1a1a; }
+.badge { font-size:11px; padding:2px 8px; border-radius:20px; float:right; }
+.badge.fast { background:#EAF3DE; color:#27500A; }
+.badge.med { background:#FAEEDA; color:#633806; }
+label { font-size:12px; font-weight:500; color:#444; display:block; margin:14px 0 5px; text-transform:uppercase; letter-spacing:.04em; }
+input, select, textarea { width:100%; padding:12px; border:1px solid #ddd; border-radius:8px; font-size:14px; font-family:inherit; }
+input:focus, select:focus { outline:none; border-color:#1a1a1a; }
+textarea { height:80px; resize:none; }
+.btn { width:100%; padding:14px; background:#1a1a1a; color:#fff; border:none; border-radius:10px; font-size:15px; font-weight:500; cursor:pointer; margin-top:16px; }
+.btn:hover { background:#333; }
+.btn:disabled { opacity:.6; cursor:not-allowed; }
+.btn-back { background:none; border:none; color:#666; font-size:14px; cursor:pointer; margin-bottom:12px; padding:0; }
+.btn-outline { width:100%; padding:12px; background:#fff; color:#1a1a1a; border:1px solid #ddd; border-radius:10px; font-size:14px; cursor:pointer; margin-top:8px; }
+.time-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px; }
+.time-slot { padding:10px; border:1px solid #ddd; border-radius:8px; text-align:center; font-size:13px; cursor:pointer; }
+.time-slot.selected { background:#1a1a1a; color:#fff; border-color:#1a1a1a; }
+.pay-option { display:flex; align-items:center; gap:12px; padding:12px; border:1px solid #ddd; border-radius:10px; margin-bottom:8px; cursor:pointer; }
+.pay-option.selected { border-color:#1a1a1a; border-width:2px; }
+.pay-icon { width:36px; height:36px; border-radius:8px; background:#f5f5f5; display:flex; align-items:center; justify-content:center; font-size:18px; }
+.summary { background:#f9f9f9; border-radius:10px; padding:14px; margin-bottom:16px; }
+.summary-row { display:flex; justify-content:space-between; font-size:14px; color:#666; margin-bottom:6px; }
+.summary-row.total { color:#1a1a1a; font-weight:600; font-size:15px; border-top:1px solid #eee; padding-top:8px; margin-top:4px; }
+.success-wrap { text-align:center; padding:40px 20px; }
+.success-icon { width:64px; height:64px; background:#EAF3DE; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:28px; margin:0 auto 16px; }
+.steps { display:flex; gap:6px; margin-bottom:20px; }
+.step-dot { flex:1; height:4px; border-radius:2px; background:#eee; }
+.step-dot.done { background:#1a1a1a; }
+.error-msg { background:#FCEBEB; color:#791F1F; padding:10px 14px; border-radius:8px; font-size:13px; margin-top:10px; display:none; }
+</style>
 </head>
 <body>
 <div class="app">
@@ -60,10 +61,30 @@
   <!-- SCREEN 1: Services -->
   <div id="s-home" class="screen active">
     <p style="font-size:12px;color:#888;margin-bottom:14px;text-transform:uppercase;letter-spacing:.05em">Select a service</p>
-    <div class="card" onclick="pick('Oil Change','$79',79)"><span class="badge fast">30 min</span><h3>Oil Change</h3><p>Conventional, synthetic blend, or full synthetic</p><div class="price">$49–$89</div></div>
-    <div class="card" onclick="pick('Brake Service','$199',199)"><span class="badge med">1–2 hrs</span><h3>Brake Service</h3><p>Pad replacement, rotor resurfacing, full overhaul</p><div class="price">$149–$299</div></div>
-    <div class="card" onclick="pick('Battery Replacement','$129',129)"><span class="badge fast">45 min</span><h3>Battery Replacement</h3><p>New battery installed and tested on the spot</p><div class="price">$99–$159</div></div>
-    <div class="card" onclick="pick('Alternator / Starter','$299',299)"><span class="badge med">2–3 hrs</span><h3>Alternator / Starter</h3><p>Diagnose and replace faulty alternator or starter</p><div class="price">$199–$399</div></div>
+    <div class="card" onclick="pick('Oil Change','$79',79)">
+      <span class="badge fast">30 min</span>
+      <h3>Oil Change</h3>
+      <p>Conventional, synthetic blend, or full synthetic</p>
+      <div class="price">$49–$89</div>
+    </div>
+    <div class="card" onclick="pick('Brake Service','$199',199)">
+      <span class="badge med">1–2 hrs</span>
+      <h3>Brake Service</h3>
+      <p>Pad replacement, rotor resurfacing, full overhaul</p>
+      <div class="price">$149–$299</div>
+    </div>
+    <div class="card" onclick="pick('Battery Replacement','$129',129)">
+      <span class="badge fast">45 min</span>
+      <h3>Battery Replacement</h3>
+      <p>New battery installed and tested on the spot</p>
+      <div class="price">$99–$159</div>
+    </div>
+    <div class="card" onclick="pick('Alternator / Starter','$299',299)">
+      <span class="badge med">2–3 hrs</span>
+      <h3>Alternator / Starter</h3>
+      <p>Diagnose and replace faulty alternator or starter</p>
+      <div class="price">$199–$399</div>
+    </div>
   </div>
 
   <!-- SCREEN 2: Customer Info -->
@@ -86,7 +107,7 @@
   <div id="s-schedule" class="screen">
     <button class="btn-back" onclick="goTo('s-info')">← Back</button>
     <div class="steps"><div class="step-dot done"></div><div class="step-dot done"></div><div class="step-dot"></div></div>
-    <h2 style="font-size:16px;margin-bottom:14px">Pick a date & time</h2>
+    <h2 style="font-size:16px;margin-bottom:14px">Pick a date &amp; time</h2>
     <label>Date</label><input id="fdate" type="date">
     <label>Available times</label>
     <div class="time-grid">
@@ -113,9 +134,18 @@
       <div class="summary-row"><span>Travel fee</span><span>$15</span></div>
       <div class="summary-row total"><span>Total</span><span id="sum-total"></span></div>
     </div>
-    <div class="pay-option selected" id="pay-card" onclick="selPay('card')"><div class="pay-icon">💳</div><div><div style="font-size:14px;font-weight:500">Credit / Debit Card</div><div style="font-size:12px;color:#888">Visa, Mastercard, Amex</div></div></div>
-    <div class="pay-option" id="pay-affirm" onclick="selPay('affirm')"><div class="pay-icon" style="font-size:12px;font-weight:700;color:#4a4af4">afrm</div><div><div style="font-size:14px;font-weight:500">Affirm</div><div style="font-size:12px;color:#888">Pay over 3, 6, or 12 months</div></div></div>
-    <div class="pay-option" id="pay-klarna" onclick="selPay('klarna')"><div class="pay-icon" style="font-size:16px;font-weight:700;color:#ff69b4">K</div><div><div style="font-size:14px;font-weight:500">Klarna</div><div style="font-size:12px;color:#888">4 interest-free payments</div></div></div>
+    <div class="pay-option selected" id="pay-card" onclick="selPay('card')">
+      <div class="pay-icon">💳</div>
+      <div><div style="font-size:14px;font-weight:500">Credit / Debit Card</div><div style="font-size:12px;color:#888">Visa, Mastercard, Amex</div></div>
+    </div>
+    <div class="pay-option" id="pay-affirm" onclick="selPay('affirm')">
+      <div class="pay-icon" style="font-size:12px;font-weight:700;color:#4a4af4">afrm</div>
+      <div><div style="font-size:14px;font-weight:500">Affirm</div><div style="font-size:12px;color:#888">Pay over 3, 6, or 12 months</div></div>
+    </div>
+    <div class="pay-option" id="pay-klarna" onclick="selPay('klarna')">
+      <div class="pay-icon" style="font-size:16px;font-weight:700;color:#ff69b4">K</div>
+      <div><div style="font-size:14px;font-weight:500">Klarna</div><div style="font-size:12px;color:#888">4 interest-free payments</div></div>
+    </div>
     <div id="card-fields">
       <label>Card Number</label><input placeholder="1234 5678 9012 3456" maxlength="19">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
@@ -137,7 +167,7 @@
       <p style="color:#666;font-size:14px;margin-bottom:20px">Confirmation sent to your email. Our tech will call 30 min before arrival.</p>
       <div class="summary" style="text-align:left">
         <div class="summary-row"><span>Service</span><span id="conf-service"></span></div>
-        <div class="summary-row"><span>Date & Time</span><span id="conf-date"></span></div>
+        <div class="summary-row"><span>Date &amp; Time</span><span id="conf-date"></span></div>
         <div class="summary-row"><span>Booking #</span><span id="conf-id" style="font-weight:600"></span></div>
       </div>
       <button class="btn-outline" onclick="location.reload()">Book another service</button>
@@ -146,60 +176,49 @@
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════
-// 1. CONFIG — fill in your values below
-// ═══════════════════════════════════════════════════════
-const SUPA_URL = 'https://' + 'fxoecspucgwlzdahhief' + '.supabase.co'
-// ↑ replace YOUR_PROJECT_ID e.g. 'abcdefgh' ← FILL IN
+// ================================================================
+// CONFIG — REPLACE THESE TWO VALUES WITH YOUR REAL SUPABASE KEYS
+// ================================================================
+var SUPA_URL = 'https://fxoecspucgwlzdahhief.supabase.co'
+// e.g. 'https://abcdefgh.supabase.co'
 
-const k1 = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.'
-// ↑ everything up to and including the first dot ← FILL IN
-const k2 = 'eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4b2Vjc3B1Y2d3bHpkYWhoaWVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2OTUzMjQsImV4cCI6MjA5MzI3MTMyNH0._S84GxGXmh1QCAiwbgIemGeRKK2NgA-bOzUyWPGt_3g'
-// ↑ everything after the first dot ← FILL IN
-const SUPA_KEY = k1 + k2
+var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4b2Vjc3B1Y2d3bHpkYWhoaWVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2OTUzMjQsImV4cCI6MjA5MzI3MTMyNH0._S84GxGXmh1QCAiwbgIemGeRKK2NgA-bOzUyWPGt_3g'
+// e.g. 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+// ================================================================
 
-// ═══════════════════════════════════════════════════════
-// 2. INIT SUPABASE — must happen before anything else
-// ═══════════════════════════════════════════════════════
-const { createClient } = supabase
-const db = createClient(SUPA_URL, SUPA_KEY)
+// Init Supabase
+var db = supabase.createClient(SUPA_URL, SUPA_KEY)
 
-// ═══════════════════════════════════════════════════════
-// 3. APP STATE — must be declared before any functions
-// ═══════════════════════════════════════════════════════
-let state = { service: '', price: '', amount: 0, time: '', date: '' }
+// App state
+var state = { service: '', price: '', amount: 0, time: '', date: '' }
 
-// ═══════════════════════════════════════════════════════
-// 4. NAVIGATION
-// ═══════════════════════════════════════════════════════
+// Navigate between screens
 function goTo(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'))
+  document.querySelectorAll('.screen').forEach(function(s) {
+    s.classList.remove('active')
+  })
   document.getElementById(id).classList.add('active')
   window.scrollTo(0, 0)
 }
 
-// ═══════════════════════════════════════════════════════
-// 5. STEP 1 — pick a service
-// ═══════════════════════════════════════════════════════
+// Step 1: pick a service
 function pick(name, price, amount) {
   state.service = name
-  state.price = price
-  state.amount = amount
+  state.price   = price
+  state.amount  = amount
   document.getElementById('chosen-service').textContent = name
-  document.getElementById('sum-service').textContent = name
-  document.getElementById('sum-price').textContent = price
-  document.getElementById('sum-total').textContent = '$' + (amount + 15)
+  document.getElementById('sum-service').textContent    = name
+  document.getElementById('sum-price').textContent      = price
+  document.getElementById('sum-total').textContent      = '$' + (amount + 15)
   goTo('s-info')
 }
 
-// ═══════════════════════════════════════════════════════
-// 6. STEP 2 — validate info form
-// ═══════════════════════════════════════════════════════
+// Step 2: validate info
 function goToSchedule() {
-  const name = document.getElementById('fname').value.trim()
-  const email = document.getElementById('femail').value.trim()
-  const phone = document.getElementById('fphone').value.trim()
-  const address = document.getElementById('faddress').value.trim()
+  var name    = document.getElementById('fname').value.trim()
+  var email   = document.getElementById('femail').value.trim()
+  var phone   = document.getElementById('fphone').value.trim()
+  var address = document.getElementById('faddress').value.trim()
   if (!name || !email || !phone || !address) {
     document.getElementById('err-info').style.display = 'block'
     return
@@ -208,83 +227,91 @@ function goToSchedule() {
   goTo('s-schedule')
 }
 
-// ═══════════════════════════════════════════════════════
-// 7. STEP 3 — pick a time slot
-// ═══════════════════════════════════════════════════════
+// Step 3: select a time slot
 function selectTime(el, time) {
-  document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'))
+  document.querySelectorAll('.time-slot').forEach(function(s) {
+    s.classList.remove('selected')
+  })
   el.classList.add('selected')
   state.time = time
 }
 
 function goToPayment() {
-  const date = document.getElementById('fdate').value
+  var date = document.getElementById('fdate').value
   if (!date || !state.time) {
     document.getElementById('err-sched').style.display = 'block'
     return
   }
   state.date = date
-  document.getElementById('conf-date').textContent = date + ' at ' + state.time
+  document.getElementById('conf-date').textContent    = date + ' at ' + state.time
   document.getElementById('conf-service').textContent = state.service
   goTo('s-payment')
 }
 
-// ═══════════════════════════════════════════════════════
-// 8. STEP 4 — payment method toggle
-// ═══════════════════════════════════════════════════════
+// Step 4: payment method toggle
 function selPay(type) {
-  document.querySelectorAll('.pay-option').forEach(o => o.classList.remove('selected'))
+  document.querySelectorAll('.pay-option').forEach(function(o) {
+    o.classList.remove('selected')
+  })
   document.getElementById('pay-' + type).classList.add('selected')
   document.getElementById('card-fields').style.display = type === 'card' ? 'block' : 'none'
-  document.getElementById('bnpl-msg').style.display = type !== 'card' ? 'block' : 'none'
+  document.getElementById('bnpl-msg').style.display    = type !== 'card' ? 'block' : 'none'
 }
 
-// ═══════════════════════════════════════════════════════
-// 9. STEP 5 — save booking to Supabase
-// ═══════════════════════════════════════════════════════
+// Step 5: save booking to Supabase
 async function confirmBooking() {
-  const btn = document.getElementById('confirm-btn')
+  var btn = document.getElementById('confirm-btn')
   btn.textContent = 'Saving...'
-  btn.disabled = true
+  btn.disabled    = true
   try {
-    // Save customer
-    const { data: customer, error: ce } = await db
+    var custResult = await db
       .from('customers')
       .insert({
-        name: document.getElementById('fname').value,
+        name:  document.getElementById('fname').value,
         email: document.getElementById('femail').value,
         phone: document.getElementById('fphone').value
       })
-      .select().single()
-    if (ce) throw ce
+      .select()
+      .single()
+    if (custResult.error) throw custResult.error
 
-    // Save booking
-    const { data: booking, error: be } = await db
+    var bookResult = await db
       .from('bookings')
       .insert({
-        customer_id: customer.id,
-        address: document.getElementById('faddress').value,
-        notes: document.getElementById('fnotes').value,
+        customer_id:  custResult.data.id,
+        address:      document.getElementById('faddress').value,
+        notes:        document.getElementById('fnotes').value,
         scheduled_at: state.date + 'T' + state.time + ':00',
         total_amount: state.amount + 15,
-        status: 'pending'
+        status:       'pending'
       })
-      .select().single()
-    if (be) throw be
+      .select()
+      .single()
+    if (bookResult.error) throw bookResult.error
 
-    // Show confirmation screen
     document.getElementById('conf-id').textContent =
-      'QW-' + booking.id.slice(0, 6).toUpperCase()
+      'QW-' + bookResult.data.id.slice(0, 6).toUpperCase()
     goTo('s-confirm')
 
   } catch (err) {
-    const e = document.getElementById('err-pay')
-    e.textContent = 'Error: ' + err.message
-    e.style.display = 'block'
-    btn.textContent = 'Confirm Booking'
-    btn.disabled = false
+    var e = document.getElementById('err-pay')
+    e.textContent    = 'Error: ' + err.message
+    e.style.display  = 'block'
+    btn.textContent  = 'Confirm Booking'
+    btn.disabled     = false
   }
 }
 </script>
+</body>
+</html>
+HTMLEOF
+echo "Done"
+Output
 
-</body></html>
+Done
+
+
+
+
+
+

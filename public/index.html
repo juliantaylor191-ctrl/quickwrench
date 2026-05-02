@@ -263,76 +263,98 @@ function selPay(type) {
   var btn = document.getElementById('confirm-btn')
   btn.textContent = 'Processing...'
   btn.disabled = true
-
+ 
   try {
-    // 1. Save customer to Supabase
-    async function confirmBooking() {
-  var btn = document.getElementById('confirm-btn')
-  btn.textContent = 'Processing...'
-  btn.disabled = true
-
-  try {
-    // 1. Save customer — use existing record if email already exists
-    var email = document.getElementById('femail').value
-    var custResult = await db
+    var fname   = document.getElementById('fname').value
+    var femail  = document.getElementById('femail').value
+    var fphone  = document.getElementById('fphone').value
+    var faddress = document.getElementById('faddress').value
+    var fnotes  = document.getElementById('fnotes').value
+ 
+    // 1. Check if customer already exists
+    var existingCheck = await db
       .from('customers')
-      .select()
-      .eq('email', email)
-      .single()
-    ... (rest of new code)
-    if (custResult.error) throw custResult.error
-
-
-    // 2. Save booking to Supabase
+      .select('id')
+      .eq('email', femail)
+ 
+    var customerId
+ 
+    if (existingCheck.data && existingCheck.data.length > 0) {
+      // Customer already exists — use their id
+      customerId = existingCheck.data[0].id
+ 
+    } else {
+      // New customer — insert them
+      var newCust = await db
+        .from('customers')
+        .insert({ name: fname, email: femail, phone: fphone })
+        .select('id')
+        .single()
+      if (newCust.error) throw newCust.error
+      customerId = newCust.data.id
+    }
+ 
+    // 2. Save booking
     var bookResult = await db
       .from('bookings')
       .insert({
-        customer_id: custResult.data.id,
-        address: document.getElementById('faddress').value,
-        notes: document.getElementById('fnotes').value,
+        customer_id:  customerId,
+        address:      faddress,
+        notes:        fnotes,
         scheduled_at: state.date + 'T' + state.time + ':00',
         total_amount: state.amount + 15,
-        status: 'pending'
+        status:       'pending'
       })
-      .select().single()
+      .select()
+      .single()
     if (bookResult.error) throw bookResult.error
-
+ 
+    var bookingId = 'QW-' + bookResult.data.id.slice(0, 6).toUpperCase()
+ 
     // 3. Send confirmation email
     await fetch('/api/sendemail', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        name: document.getElementById('fname').value,
-        email: document.getElementById('femail').value,
-        service: state.service,
-        date: state.date,
-        time: state.time,
-        bookingId: 'QW-' + bookResult.data.id.slice(0,6).toUpperCase(),
-        total: state.amount + 15
+        name:      fname,
+        email:     femail,
+        service:   state.service,
+        date:      state.date,
+        time:      state.time,
+        bookingId: bookingId,
+        total:     state.amount + 15
       })
     })
-
-    // 4. Redirect to Stripe checkout
+ 
+    // 4. Create Stripe checkout session and redirect
     var checkoutRes = await fetch('/api/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        amount: state.amount + 15,
-        service: state.service,
-        customerEmail: document.getElementById('femail').value
+        amount:        state.amount + 15,
+        service:       state.service,
+        customerEmail: femail
       })
     })
-    var { url } = await checkoutRes.json()
-    window.location.href = url // → Stripe checkout page
-
+ 
+    var checkoutData = await checkoutRes.json()
+ 
+    if (!checkoutData.url) {
+      throw new Error('Payment setup failed: ' + (checkoutData.error || 'unknown error'))
+    }
+ 
+    // Redirect to Stripe
+    window.location.href = checkoutData.url
+ 
   } catch (err) {
     var e = document.getElementById('err-pay')
-    e.textContent = 'Error: ' + err.message
+    e.textContent   = 'Error: ' + err.message
     e.style.display = 'block'
     btn.textContent = 'Confirm Booking'
-    btn.disabled = false
+    btn.disabled    = false
   }
 }
+ 
 
 </script>
 </body>

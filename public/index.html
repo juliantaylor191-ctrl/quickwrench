@@ -259,48 +259,74 @@ function selPay(type) {
 }
 
 // Step 5: save booking to Supabase
-async function confirmBooking() {
+ async function confirmBooking() {
   var btn = document.getElementById('confirm-btn')
-  btn.textContent = 'Saving...'
-  btn.disabled    = true
+  btn.textContent = 'Processing...'
+  btn.disabled = true
+
   try {
+    // 1. Save customer to Supabase
     var custResult = await db
       .from('customers')
       .insert({
-        name:  document.getElementById('fname').value,
+        name: document.getElementById('fname').value,
         email: document.getElementById('femail').value,
         phone: document.getElementById('fphone').value
       })
-      .select()
-      .single()
+      .select().single()
     if (custResult.error) throw custResult.error
 
+    // 2. Save booking to Supabase
     var bookResult = await db
       .from('bookings')
       .insert({
-        customer_id:  custResult.data.id,
-        address:      document.getElementById('faddress').value,
-        notes:        document.getElementById('fnotes').value,
+        customer_id: custResult.data.id,
+        address: document.getElementById('faddress').value,
+        notes: document.getElementById('fnotes').value,
         scheduled_at: state.date + 'T' + state.time + ':00',
         total_amount: state.amount + 15,
-        status:       'pending'
+        status: 'pending'
       })
-      .select()
-      .single()
+      .select().single()
     if (bookResult.error) throw bookResult.error
 
-    document.getElementById('conf-id').textContent =
-      'QW-' + bookResult.data.id.slice(0, 6).toUpperCase()
-    goTo('s-confirm')
+    // 3. Send confirmation email
+    await fetch('/api/sendemail', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: document.getElementById('fname').value,
+        email: document.getElementById('femail').value,
+        service: state.service,
+        date: state.date,
+        time: state.time,
+        bookingId: 'QW-' + bookResult.data.id.slice(0,6).toUpperCase(),
+        total: state.amount + 15
+      })
+    })
+
+    // 4. Redirect to Stripe checkout
+    var checkoutRes = await fetch('/api/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        amount: state.amount + 15,
+        service: state.service,
+        customerEmail: document.getElementById('femail').value
+      })
+    })
+    var { url } = await checkoutRes.json()
+    window.location.href = url // → Stripe checkout page
 
   } catch (err) {
     var e = document.getElementById('err-pay')
-    e.textContent    = 'Error: ' + err.message
-    e.style.display  = 'block'
-    btn.textContent  = 'Confirm Booking'
-    btn.disabled     = false
+    e.textContent = 'Error: ' + err.message
+    e.style.display = 'block'
+    btn.textContent = 'Confirm Booking'
+    btn.disabled = false
   }
 }
+
 </script>
 </body>
 </html>

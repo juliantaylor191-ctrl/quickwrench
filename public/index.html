@@ -266,15 +266,22 @@ function selPay(type) {
 
   try {
     // 1. Save customer to Supabase
+    async function confirmBooking() {
+  var btn = document.getElementById('confirm-btn')
+  btn.textContent = 'Processing...'
+  btn.disabled = true
+
+  try {
+    // 1. Save customer — use existing record if email already exists
+    var email = document.getElementById('femail').value
     var custResult = await db
       .from('customers')
-      .insert({
-        name: document.getElementById('fname').value,
-        email: document.getElementById('femail').value,
-        phone: document.getElementById('fphone').value
-      })
-      .select().single()
+      .select()
+      .eq('email', email)
+      .single()
+    ... (rest of new code)
     if (custResult.error) throw custResult.error
+
 
     // 2. Save booking to Supabase
     var bookResult = await db

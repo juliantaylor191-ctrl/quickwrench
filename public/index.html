@@ -10,8 +10,6 @@
 * { box-sizing:border-box; margin:0; padding:0; }
 body { font-family:'Inter',sans-serif; background:#F5F0E8; }
 .app { max-width:390px; margin:0 auto; background:#F5F0E8; min-height:100vh; }
-
-/* ── Header ── */
 .header { background:linear-gradient(135deg,#841617 0%,#6B1212 100%); padding:24px 20px 20px; color:#fff; position:relative; overflow:hidden; }
 .header::after { content:''; position:absolute; top:-40px; right:-40px; width:140px; height:140px; background:rgba(245,240,232,0.08); border-radius:50%; pointer-events:none; }
 .logo-row { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
@@ -21,13 +19,9 @@ body { font-family:'Inter',sans-serif; background:#F5F0E8; }
 .rating-row { display:flex; align-items:center; gap:6px; margin-top:10px; }
 .stars { color:#F5F0E8; font-size:12px; }
 .rating-text { font-size:11px; color:rgba(245,240,232,0.75); }
-
-/* ── Screens ── */
 .screen { display:none; padding:16px; }
 .screen.active { display:block; }
 .section-label { font-size:11px; font-weight:700; color:#841617; text-transform:uppercase; letter-spacing:.07em; margin-bottom:10px; }
-
-/* ── Service Cards ── */
 .card { background:#fff; border-radius:14px; padding:16px; margin-bottom:10px; box-shadow:0 2px 10px rgba(132,22,23,0.08); position:relative; overflow:hidden; }
 .card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:4px; background:#841617; border-radius:0 3px 3px 0; }
 .card-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:4px; }
@@ -35,17 +29,13 @@ body { font-family:'Inter',sans-serif; background:#F5F0E8; }
 .card p { font-size:12px; color:#888; line-height:1.5; }
 .card-bottom { display:flex; align-items:center; justify-content:space-between; margin-top:10px; }
 .card .price { font-size:14px; font-weight:700; color:#841617; }
-.book-btn { background:#841617; color:#F5F0E8; border:none; border-radius:8px; padding:8px 14px; font-size:12px; font-weight:700; cursor:pointer; font-family:inherit; transition:background .15s; }
+.book-btn { background:#841617; color:#F5F0E8; border:none; border-radius:8px; padding:8px 14px; font-size:12px; font-weight:700; cursor:pointer; font-family:inherit; }
 .book-btn:hover { background:#6B1212; }
 .badge { font-size:10px; padding:3px 8px; border-radius:20px; font-weight:600; }
 .badge.fast { background:#EAF3DE; color:#27500A; }
 .badge.med { background:#FFF3E0; color:#E65100; }
 .badge.slow { background:#FAEEDA; color:#633806; }
 .badge.quote { background:#F0E8F5; color:#5B2D8E; }
-
-/* ── Sub-service options ── */
-.sub-screen { display:none; }
-.sub-screen.active { display:block; }
 .option-card { background:#fff; border-radius:12px; padding:14px 16px; margin-bottom:8px; border:2px solid transparent; cursor:pointer; box-shadow:0 1px 6px rgba(0,0,0,0.06); transition:border-color .15s; }
 .option-card:hover { border-color:#841617; }
 .option-card.selected { border-color:#841617; background:#FFF8F8; }
@@ -55,60 +45,40 @@ body { font-family:'Inter',sans-serif; background:#F5F0E8; }
 .axle-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px; }
 .axle-btn { padding:11px; border:2px solid #E5E5EA; border-radius:10px; text-align:center; font-size:13px; font-weight:500; cursor:pointer; background:#fff; font-family:inherit; transition:all .15s; }
 .axle-btn.selected { background:#841617; color:#fff; border-color:#841617; font-weight:700; }
-
-/* ── Quote card ── */
 .quote-card { background:#fff; border-radius:14px; padding:20px; box-shadow:0 2px 10px rgba(132,22,23,0.08); text-align:center; }
 .quote-icon { width:60px; height:60px; background:#FFF0F0; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:26px; margin:0 auto 14px; }
 .quote-card h3 { font-size:16px; font-weight:700; color:#1a1a1a; margin-bottom:6px; }
 .quote-card p { font-size:13px; color:#666; line-height:1.6; margin-bottom:16px; }
 .sms-btn { display:flex; align-items:center; justify-content:center; gap:8px; background:#841617; color:#F5F0E8; border:none; border-radius:12px; padding:14px 20px; font-size:15px; font-weight:700; cursor:pointer; font-family:inherit; width:100%; text-decoration:none; }
-.sms-btn:hover { background:#6B1212; }
 .parts-list { background:#F5F0E8; border-radius:10px; padding:12px 14px; margin-bottom:16px; text-align:left; }
 .parts-list p { font-size:12px; color:#666; margin-bottom:3px; }
 .parts-list p::before { content:'• '; color:#841617; font-weight:700; }
-
-/* ── Forms ── */
 label { font-size:11px; font-weight:700; color:#841617; display:block; margin:14px 0 5px; text-transform:uppercase; letter-spacing:.05em; }
-input,select,textarea { width:100%; padding:13px 14px; border:1.5px solid #E5E5EA; border-radius:10px; font-size:15px; font-family:inherit; background:#fff; color:#1a1a1a; transition:border-color .15s; }
-input:focus,select:focus,textarea:focus { outline:none; border-color:#841617; }
+input, select, textarea { width:100%; padding:13px 14px; border:1.5px solid #E5E5EA; border-radius:10px; font-size:15px; font-family:inherit; background:#fff; color:#1a1a1a; transition:border-color .15s; }
+input:focus, select:focus, textarea:focus { outline:none; border-color:#841617; }
 textarea { height:80px; resize:none; }
-
-/* ── Buttons ── */
 .btn { width:100%; padding:15px; background:#841617; color:#F5F0E8; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; margin-top:16px; font-family:inherit; transition:background .15s; }
 .btn:hover { background:#6B1212; }
 .btn:disabled { opacity:.6; cursor:not-allowed; }
 .btn-back { background:none; border:none; color:#841617; font-size:14px; cursor:pointer; margin-bottom:12px; padding:0; font-family:inherit; font-weight:500; }
 .btn-outline { width:100%; padding:13px; background:#fff; color:#841617; border:2px solid #841617; border-radius:12px; font-size:15px; font-weight:600; cursor:pointer; margin-top:10px; font-family:inherit; }
-
-/* ── Steps ── */
 .steps { display:flex; gap:6px; margin-bottom:20px; }
 .step-dot { flex:1; height:4px; border-radius:2px; background:#E5E5EA; }
 .step-dot.done { background:#841617; }
-
-/* ── Time slots ── */
 .time-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px; }
 .time-slot { padding:11px; border:2px solid #E5E5EA; border-radius:10px; text-align:center; font-size:13px; cursor:pointer; font-family:inherit; background:#fff; transition:all .15s; font-weight:500; }
 .time-slot.selected { background:#841617; color:#F5F0E8; border-color:#841617; font-weight:700; }
-.time-slot:hover:not(.selected) { border-color:#841617; color:#841617; }
-
-/* ── Payment ── */
+.time-slot.taken { background:#F5F5F5; border-color:#E5E5EA; color:#bbb; cursor:not-allowed; font-weight:400; }
+.time-slot:hover:not(.selected):not(.taken) { border-color:#841617; color:#841617; }
 .pay-option { display:flex; align-items:center; gap:12px; padding:14px; border:2px solid #E5E5EA; border-radius:12px; margin-bottom:8px; cursor:pointer; background:#fff; transition:border-color .15s; }
 .pay-option.selected { border-color:#841617; background:#FFF8F8; }
 .pay-icon { width:38px; height:38px; border-radius:9px; background:#F5F0E8; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
-
-/* ── Summary ── */
 .summary { background:#fff; border-radius:12px; padding:14px; margin-bottom:16px; box-shadow:0 1px 6px rgba(132,22,23,0.06); }
 .summary-row { display:flex; justify-content:space-between; font-size:14px; color:#888; margin-bottom:8px; }
 .summary-row.total { color:#1a1a1a; font-weight:700; font-size:16px; border-top:1px solid #F5F0E8; padding-top:10px; margin-top:4px; }
-
-/* ── Success ── */
 .success-wrap { text-align:center; padding:48px 20px; }
 .success-icon { width:72px; height:72px; background:#EAF3DE; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:32px; margin:0 auto 20px; }
-
-/* ── Error ── */
 .error-msg { background:#FCEBEB; color:#791F1F; padding:11px 14px; border-radius:10px; font-size:13px; margin-top:10px; display:none; }
-
-/* ── Trust bar ── */
 .trust-bar { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px; }
 .trust-item { background:#fff; border-radius:10px; padding:10px 12px; display:flex; align-items:center; gap:8px; box-shadow:0 1px 4px rgba(0,0,0,0.05); }
 .trust-icon { font-size:16px; }
@@ -118,7 +88,6 @@ textarea { height:80px; resize:none; }
 <body>
 <div class="app">
 
-  <!-- HEADER -->
   <div class="header">
     <div class="logo-row">
       <div class="logo-icon">🔧</div>
@@ -137,28 +106,21 @@ textarea { height:80px; resize:none; }
   <div id="s-home" class="screen active">
     <div class="trust-bar">
       <div class="trust-item"><span class="trust-icon">📍</span><span class="trust-text">We come to your location</span></div>
-      <div class="trust-item"><span class="trust-icon">⏱</span><span class="trust-text">Same-day service available</span></div>
+      <div class="trust-item"><span class="trust-icon">⏱</span><span class="trust-text">Same-day available</span></div>
       <div class="trust-item"><span class="trust-icon">🔒</span><span class="trust-text">Upfront pricing</span></div>
       <div class="trust-item"><span class="trust-icon">✓</span><span class="trust-text">ASE Certified techs</span></div>
     </div>
-
     <p class="section-label">Choose a service</p>
-
-    <!-- Oil Change -->
     <div class="card">
       <div class="card-top"><h3>Oil Change</h3><span class="badge fast">30 min</span></div>
-      <p>Conventional, synthetic blend, or full synthetic. Filter included. We come to you.</p>
+      <p>Conventional, synthetic blend, or full synthetic. Filter included.</p>
       <div class="card-bottom"><span class="price">From $39</span><button class="book-btn" onclick="showOilChange()">Book →</button></div>
     </div>
-
-    <!-- Brake Service -->
     <div class="card">
       <div class="card-top"><h3>Brake Service</h3><span class="badge med">1–2 hrs</span></div>
       <p>Pad replacement or rotor and pad replacement. Front or rear axle.</p>
       <div class="card-bottom"><span class="price">From $99/axle</span><button class="book-btn" onclick="showBrakes()">Book →</button></div>
     </div>
-
-    <!-- Part Replacement -->
     <div class="card">
       <div class="card-top"><h3>Part Replacement</h3><span class="badge quote">Quote</span></div>
       <p>Battery, starter, alternator, and more. Text us for a fast quote.</p>
@@ -166,47 +128,41 @@ textarea { height:80px; resize:none; }
     </div>
   </div>
 
-  <!-- SCREEN 2A: Oil Change Options -->
+  <!-- SCREEN 2A: Oil Change -->
   <div id="s-oil" class="screen">
     <button class="btn-back" onclick="goTo('s-home')">← Back</button>
     <p class="section-label">Oil Change — Choose your oil type</p>
-
-    <div class="option-card" onclick="selectOil('Conventional Oil Change', 39)" id="oil-conv">
+    <div class="option-card" onclick="selectOil('Conventional Oil Change',39)" id="oil-conv">
       <h4>Conventional</h4>
       <p>Standard motor oil. Ideal for older vehicles or basic engines.</p>
       <div class="opt-price">$39</div>
     </div>
-
-    <div class="option-card" onclick="selectOil('Synthetic Blend Oil Change', 59)" id="oil-blend">
+    <div class="option-card" onclick="selectOil('Synthetic Blend Oil Change',59)" id="oil-blend">
       <h4>Synthetic Blend</h4>
       <p>Mix of conventional and synthetic. Better protection, great value.</p>
       <div class="opt-price">$59</div>
     </div>
-
-    <div class="option-card" onclick="selectOil('Full Synthetic Oil Change', 89)" id="oil-full">
+    <div class="option-card" onclick="selectOil('Full Synthetic Oil Change',89)" id="oil-full">
       <h4>Full Synthetic</h4>
-      <p>Maximum engine protection and performance. Recommended for most modern vehicles.</p>
+      <p>Maximum engine protection. Recommended for most modern vehicles.</p>
       <div class="opt-price">$89</div>
     </div>
   </div>
 
-  <!-- SCREEN 2B: Brake Service Options -->
+  <!-- SCREEN 2B: Brakes -->
   <div id="s-brakes" class="screen">
     <button class="btn-back" onclick="goTo('s-home')">← Back</button>
     <p class="section-label">Brake Service — Choose your service</p>
-
-    <div class="option-card" onclick="selectBrakeType('Brake Pad Replacement', 99)" id="brake-pads">
+    <div class="option-card" onclick="selectBrakeType('Brake Pad Replacement',99)" id="brake-pads">
       <h4>Brake Pad Replacement</h4>
       <p>Replace worn brake pads. Keeps your rotors in good condition.</p>
       <div class="opt-price">$99 per axle</div>
     </div>
-
-    <div class="option-card" onclick="selectBrakeType('Rotor and Pad Replacement', 149)" id="brake-rotor">
+    <div class="option-card" onclick="selectBrakeType('Rotor and Pad Replacement',149)" id="brake-rotor">
       <h4>Rotor &amp; Pad Replacement</h4>
       <p>Replace both rotors and pads for a complete brake refresh.</p>
       <div class="opt-price">$149 per axle</div>
     </div>
-
     <div id="axle-selector" style="display:none;margin-top:16px">
       <p class="section-label">Which axle?</p>
       <div class="axle-grid">
@@ -217,16 +173,14 @@ textarea { height:80px; resize:none; }
     </div>
   </div>
 
-  <!-- SCREEN 2C: Part Replacement Quote -->
+  <!-- SCREEN 2C: Part Replacement -->
   <div id="s-parts" class="screen">
     <button class="btn-back" onclick="goTo('s-home')">← Back</button>
     <p class="section-label">Part Replacement — Get a quote</p>
-
     <div class="quote-card">
       <div class="quote-icon">💬</div>
       <h3>Text us for a fast quote</h3>
-      <p>We'll give you an upfront price for your specific vehicle and part. Usually responds within 30 minutes.</p>
-
+      <p>We will give you an upfront price for your specific vehicle and part. Usually responds within 30 minutes.</p>
       <div class="parts-list">
         <p>Battery replacement</p>
         <p>Starter replacement</p>
@@ -235,7 +189,6 @@ textarea { height:80px; resize:none; }
         <p>Spark plugs</p>
         <p>And more — just ask!</p>
       </div>
-
       <a href="sms:+14052748921&body=Hi! I need a quote for part replacement on my [Year Make Model]" class="sms-btn">
         📱 Text (405) 274-8921 for a Quote
       </a>
@@ -260,24 +213,14 @@ textarea { height:80px; resize:none; }
   </div>
 
   <!-- SCREEN 4: Schedule -->
-  <!-- ================================================================
-REPLACE your entire s-schedule screen div with this updated version.
-Search for: <div id="s-schedule" class="screen">
-Select everything from that line to its closing </div>
-and replace with this.
-================================================================ -->
-
   <div id="s-schedule" class="screen">
     <button class="btn-back" onclick="goTo('s-info')">← Back</button>
     <div class="steps"><div class="step-dot done"></div><div class="step-dot done"></div><div class="step-dot"></div></div>
     <h2 style="font-size:16px;font-weight:700;margin-bottom:14px;color:#1a1a1a">Pick a date &amp; time</h2>
-
     <label>Date</label>
     <input id="fdate" type="date" onchange="loadTimeSlots()">
-    <!-- ↑ onchange="loadTimeSlots()" is the key addition -->
-
     <label>Available times</label>
-    <div id="slots-loading" style="display:none;font-size:12px;color:#888;padding:8px 0">Checking availability...</div>
+    <p id="slots-hint" style="font-size:12px;color:#888;margin-bottom:8px;margin-top:4px">Pick a date above to see available times</p>
     <div class="time-grid">
       <div class="time-slot" data-time="08:00" onclick="selectTime(this,'08:00')">8:00 AM</div>
       <div class="time-slot" data-time="09:00" onclick="selectTime(this,'09:00')">9:00 AM</div>
@@ -288,11 +231,9 @@ and replace with this.
       <div class="time-slot" data-time="15:00" onclick="selectTime(this,'15:00')">3:00 PM</div>
       <div class="time-slot" data-time="16:00" onclick="selectTime(this,'16:00')">4:00 PM</div>
     </div>
-
     <div id="err-sched" class="error-msg">Please pick a date and time.</div>
     <button class="btn" onclick="goToPayment()">Continue to Payment →</button>
   </div>
-   
 
   <!-- SCREEN 5: Payment -->
   <div id="s-payment" class="screen">
@@ -323,7 +264,7 @@ and replace with this.
         <div><label>CVV</label><input placeholder="123" maxlength="4"></div>
       </div>
     </div>
-    <div id="bnpl-msg" style="display:none;background:#F5F0E8;padding:12px;border-radius:8px;font-size:13px;color:#666;margin-top:8px">You'll complete your application after confirming.</div>
+    <div id="bnpl-msg" style="display:none;background:#F5F0E8;padding:12px;border-radius:8px;font-size:13px;color:#666;margin-top:8px">You will complete your application after confirming.</div>
     <div id="err-pay" class="error-msg"></div>
     <button class="btn" id="confirm-btn" onclick="confirmBooking()">Confirm Booking</button>
     <p style="text-align:center;font-size:11px;color:#999;margin-top:10px">🔒 Payments are encrypted and secure</p>
@@ -333,7 +274,7 @@ and replace with this.
   <div id="s-confirm" class="screen">
     <div class="success-wrap">
       <div class="success-icon">✓</div>
-      <h2 style="font-size:20px;font-weight:800;margin-bottom:8px;color:#1a1a1a">You're all set!</h2>
+      <h2 style="font-size:20px;font-weight:800;margin-bottom:8px;color:#1a1a1a">You are all set!</h2>
       <p style="color:#666;font-size:14px;margin-bottom:24px;line-height:1.6">Confirmation sent to your email. Our technician will call 30 minutes before arrival.</p>
       <div class="summary" style="text-align:left">
         <div class="summary-row"><span>Service</span><span id="conf-service" style="font-weight:600;color:#841617;text-align:right;max-width:200px"></span></div>
@@ -348,7 +289,7 @@ and replace with this.
 
 <script>
 // ================================================================
-// CONFIG — REPLACE THESE WITH YOUR REAL SUPABASE KEYS
+// CONFIG
 // ================================================================
 var SUPA_URL = 'https://fxoecspucgwlzdahhief.supabase.co'
 var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4b2Vjc3B1Y2d3bHpkYWhoaWVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2OTUzMjQsImV4cCI6MjA5MzI3MTMyNH0._S84GxGXmh1QCAiwbgIemGeRKK2NgA-bOzUyWPGt_3g'
@@ -356,17 +297,23 @@ var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 
 var db = supabase.createClient(SUPA_URL, SUPA_KEY)
 
-// App state
 var state = {
-  service: '', price: '', amount: 0,
-  time: '', date: '',
+  service: '',
+  price: '',
+  amount: 0,
+  time: '',
+  date: '',
   serviceScreen: 's-home',
-  brakeType: '', brakePrice: 0, axle: ''
+  brakeType: '',
+  brakePrice: 0,
+  axle: ''
 }
 
-// ── Navigation ──
+// ── Navigation ──────────────────────────────────────────────────
 function goTo(id) {
-  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active') })
+  document.querySelectorAll('.screen').forEach(function(s) {
+    s.classList.remove('active')
+  })
   document.getElementById(id).classList.add('active')
   window.scrollTo(0, 0)
 }
@@ -375,75 +322,83 @@ function goBackFromInfo() {
   goTo(state.serviceScreen || 's-home')
 }
 
-// ── Oil Change ──
+// ── Shared helper ────────────────────────────────────────────────
+function setServiceDisplay(name) {
+  document.getElementById('chosen-service').textContent  = name
+  document.getElementById('sum-service').textContent     = name
+  document.getElementById('sum-price').textContent       = state.price
+  document.getElementById('sum-total').textContent       = '$' + (state.amount + 15)
+  document.getElementById('conf-service').textContent    = name
+}
+
+// ── Oil Change ───────────────────────────────────────────────────
 function showOilChange() {
   state.serviceScreen = 's-oil'
   goTo('s-oil')
 }
 
 function selectOil(name, amount) {
-  document.querySelectorAll('#s-oil .option-card').forEach(function(c) { c.classList.remove('selected') })
-  var map = { 39: 'oil-conv', 59: 'oil-blend', 89: 'oil-full' }
-  var el = document.getElementById(map[amount])
-  if (el) el.classList.add('selected')
+  document.querySelectorAll('#s-oil .option-card').forEach(function(c) {
+    c.classList.remove('selected')
+  })
+  var ids = { 39: 'oil-conv', 59: 'oil-blend', 89: 'oil-full' }
+  var el = document.getElementById(ids[amount])
+  if (el) { el.classList.add('selected') }
   state.service = name
   state.price   = '$' + amount
   state.amount  = amount
   setServiceDisplay(name)
-  setTimeout(function() { goTo('s-info') }, 250)
+  setTimeout(function() { goTo('s-info') }, 200)
 }
 
-// ── Brakes ──
+// ── Brake Service ────────────────────────────────────────────────
 function showBrakes() {
   state.serviceScreen = 's-brakes'
   goTo('s-brakes')
 }
 
 function selectBrakeType(type, price) {
-  document.querySelectorAll('#s-brakes .option-card').forEach(function(c) { c.classList.remove('selected') })
-  var id = price === 99 ? 'brake-pads' : 'brake-rotor'
+  document.querySelectorAll('#s-brakes .option-card').forEach(function(c) {
+    c.classList.remove('selected')
+  })
+  var id = (price === 99) ? 'brake-pads' : 'brake-rotor'
   document.getElementById(id).classList.add('selected')
   state.brakeType  = type
   state.brakePrice = price
   state.axle       = ''
-  document.querySelectorAll('.axle-btn').forEach(function(b) { b.classList.remove('selected') })
+  document.querySelectorAll('.axle-btn').forEach(function(b) {
+    b.classList.remove('selected')
+  })
   document.getElementById('brake-confirm-btn').style.display = 'none'
   document.getElementById('axle-selector').style.display = 'block'
 }
 
 function selectAxle(axle) {
   state.axle = axle
-  document.querySelectorAll('.axle-btn').forEach(function(b) { b.classList.remove('selected') })
+  document.querySelectorAll('.axle-btn').forEach(function(b) {
+    b.classList.remove('selected')
+  })
   document.getElementById('axle-' + axle.toLowerCase()).classList.add('selected')
   document.getElementById('brake-confirm-btn').style.display = 'block'
 }
 
 function confirmBrake() {
-  if (!state.brakeType || !state.axle) return
-  var fullName    = state.brakeType + ' (' + state.axle + ' Axle)'
-  state.service   = fullName
-  state.price     = '$' + state.brakePrice + '/axle'
-  state.amount    = state.brakePrice
+  if (!state.brakeType || !state.axle) { return }
+  var fullName  = state.brakeType + ' (' + state.axle + ' Axle)'
+  state.service = fullName
+  state.price   = '$' + state.brakePrice + '/axle'
+  state.amount  = state.brakePrice
   setServiceDisplay(fullName)
   goTo('s-info')
 }
 
-// ── Part Replacement ──
+// ── Part Replacement ─────────────────────────────────────────────
 function showPartReplacement() {
   state.serviceScreen = 's-parts'
   goTo('s-parts')
 }
 
-// ── Shared helpers ──
-function setServiceDisplay(name) {
-  document.getElementById('chosen-service').textContent = name
-  document.getElementById('sum-service').textContent    = name
-  document.getElementById('sum-price').textContent      = state.price
-  document.getElementById('sum-total').textContent      = '$' + (state.amount + 15)
-  document.getElementById('conf-service').textContent   = name
-}
-
-// ── Step 2: validate info ──
+// ── Customer Info ────────────────────────────────────────────────
 function goToSchedule() {
   var name    = document.getElementById('fname').value.trim()
   var email   = document.getElementById('femail').value.trim()
@@ -457,79 +412,57 @@ function goToSchedule() {
   goTo('s-schedule')
 }
 
-// ── Step 3: time slot ──
+// ── Availability check ───────────────────────────────────────────
 async function loadTimeSlots() {
   var date = document.getElementById('fdate').value
-  if (!date) return
- 
+  if (!date) { return }
+
+  var hint = document.getElementById('slots-hint')
+  if (hint) { hint.textContent = 'Checking availability...' }
+
   var slots = document.querySelectorAll('.time-slot')
-  
-  // Reset all slots first
   slots.forEach(function(s) {
     s.classList.remove('selected', 'taken')
-    s.style.opacity = '1'
-    s.style.cursor  = 'pointer'
-    s.style.textDecoration = 'none'
+    s.style.opacity = '0.5'
   })
- 
-  // Show loading state
-  slots.forEach(function(s) { s.style.opacity = '0.4' })
- 
-  // Fetch booked AND blocked slots for this date
+
   var result = await db
     .from('bookings')
     .select('scheduled_at, status')
     .gte('scheduled_at', date + 'T00:00:00')
     .lte('scheduled_at', date + 'T23:59:59')
     .neq('status', 'cancelled')
- 
-  // Reset opacity
+
   slots.forEach(function(s) { s.style.opacity = '1' })
- 
-  if (result.error) return
- 
-  // Build list of taken times (booked or blocked)
-  var takenTimes = (result.data || []).map(function(b) {
+  if (hint) { hint.style.display = 'none' }
+
+  if (result.error || !result.data) { return }
+
+  var takenTimes = result.data.map(function(b) {
     return new Date(b.scheduled_at).toTimeString().slice(0, 5)
   })
- 
-  // Mark taken slots
+
   slots.forEach(function(slot) {
-    var slotTime = slot.getAttribute('data-time')
-    if (takenTimes.includes(slotTime)) {
+    var t = slot.getAttribute('data-time')
+    if (takenTimes.indexOf(t) > -1) {
       slot.classList.add('taken')
-      slot.textContent = slot.textContent.split(' ')[0] + ' ' +
-                         (slot.textContent.split(' ')[1] || '') + ' — Taken'
-      slot.style.opacity      = '0.4'
-      slot.style.cursor       = 'not-allowed'
-      slot.style.background   = '#F5F5F5'
-      slot.style.borderColor  = '#E5E5EA'
-      slot.style.color        = '#999'
     }
   })
- 
-  // Reset state time if previously selected slot is now taken
-  if (state.time && takenTimes.includes(state.time)) {
+
+  if (state.time && takenTimes.indexOf(state.time) > -1) {
     state.time = ''
   }
 }
-// ================================================================
-// REPLACE your existing selectTime function with this version.
-// Search for: function selectTime(el, time)
-// Replace the whole function with this.
-// ================================================================
 
+// ── Time slot selection ──────────────────────────────────────────
 function selectTime(el, time) {
-  // Don't allow selecting a taken slot
-  if (el.classList.contains('taken')) return
-
+  if (el.classList.contains('taken')) { return }
   document.querySelectorAll('.time-slot').forEach(function(s) {
     s.classList.remove('selected')
   })
   el.classList.add('selected')
   state.time = time
   document.getElementById('err-sched').style.display = 'none'
-}
 }
 
 function goToPayment() {
@@ -543,15 +476,17 @@ function goToPayment() {
   goTo('s-payment')
 }
 
-// ── Step 4: payment toggle ──
+// ── Payment method toggle ────────────────────────────────────────
 function selPay(type) {
-  document.querySelectorAll('.pay-option').forEach(function(o) { o.classList.remove('selected') })
+  document.querySelectorAll('.pay-option').forEach(function(o) {
+    o.classList.remove('selected')
+  })
   document.getElementById('pay-' + type).classList.add('selected')
-  document.getElementById('card-fields').style.display = type === 'card' ? 'block' : 'none'
-  document.getElementById('bnpl-msg').style.display    = type !== 'card' ? 'block' : 'none'
+  document.getElementById('card-fields').style.display = (type === 'card') ? 'block' : 'none'
+  document.getElementById('bnpl-msg').style.display    = (type !== 'card') ? 'block' : 'none'
 }
 
-// ── Step 5: confirm booking ──
+// ── Confirm booking ──────────────────────────────────────────────
 async function confirmBooking() {
   var btn = document.getElementById('confirm-btn')
   btn.textContent = 'Processing...'
@@ -564,18 +499,19 @@ async function confirmBooking() {
     var faddress = document.getElementById('faddress').value
     var fnotes   = document.getElementById('fnotes').value
 
-    // Check if customer exists
-    var existingCheck = await db.from('customers').select('id').eq('email', femail)
+    // Check if customer already exists
+    var existing = await db.from('customers').select('id').eq('email', femail)
     var customerId
 
-    if (existingCheck.data && existingCheck.data.length > 0) {
-      customerId = existingCheck.data[0].id
+    if (existing.data && existing.data.length > 0) {
+      customerId = existing.data[0].id
     } else {
       var newCust = await db
         .from('customers')
         .insert({ name: fname, email: femail, phone: fphone })
-        .select('id').single()
-      if (newCust.error) throw newCust.error
+        .select('id')
+        .single()
+      if (newCust.error) { throw newCust.error }
       customerId = newCust.data.id
     }
 
@@ -590,8 +526,9 @@ async function confirmBooking() {
         total_amount: state.amount + 15,
         status:       'pending'
       })
-      .select().single()
-    if (bookResult.error) throw bookResult.error
+      .select()
+      .single()
+    if (bookResult.error) { throw bookResult.error }
 
     var bookingId = 'SQW-' + bookResult.data.id.slice(0, 6).toUpperCase()
 
@@ -612,13 +549,16 @@ async function confirmBooking() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        amount: state.amount + 15,
-        service: state.service,
+        amount:        state.amount + 15,
+        service:       state.service,
         customerEmail: femail
       })
     })
+
     var checkoutData = await checkoutRes.json()
-    if (!checkoutData.url) throw new Error('Payment setup failed: ' + (checkoutData.error || 'unknown'))
+    if (!checkoutData.url) {
+      throw new Error('Payment setup failed: ' + (checkoutData.error || 'unknown'))
+    }
     window.location.href = checkoutData.url
 
   } catch (err) {

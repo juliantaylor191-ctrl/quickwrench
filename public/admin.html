@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sooner QuickWrench — Admin</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'Inter',sans-serif; background:#F5F0E8; }
+.app { max-width:390px; margin:0 auto; background:#F5F0E8; min-height:100vh; }
+
+/* Header */
+.header { background:linear-gradient(135deg,#841617 0%,#6B1212 100%); padding:20px; color:#fff; }
+.header h1 { font-size:18px; font-weight:800; color:#F5F0E8; }
+.header p { font-size:12px; color:rgba(245,240,232,0.7); margin-top:2px; }
+
+/* Login */
+.login-wrap { padding:24px 16px; }
+.login-card { background:#fff; border-radius:14px; padding:24px; box-shadow:0 2px 10px rgba(132,22,23,0.08); }
+.login-card h2 { font-size:16px; font-weight:700; margin-bottom:4px; }
+.login-card p { font-size:13px; color:#888; margin-bottom:16px; }
+label { font-size:11px; font-weight:700; color:#841617; display:block; margin:12px 0 4px; text-transform:uppercase; letter-spacing:.05em; }
+input, select { width:100%; padding:12px 14px; border:1.5px solid #E5E5EA; border-radius:10px; font-size:14px; font-family:inherit; background:#fff; }
+input:focus, select:focus { outline:none; border-color:#841617; }
+.btn { width:100%; padding:14px; background:#841617; color:#F5F0E8; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; margin-top:14px; font-family:inherit; }
+.btn:hover { background:#6B1212; }
+.btn-sm { padding:7px 14px; font-size:12px; font-weight:600; border:none; border-radius:8px; cursor:pointer; font-family:inherit; }
+.btn-green { background:#EAF3DE; color:#27500A; }
+.btn-red { background:#FCEBEB; color:#791F1F; }
+.btn-amber { background:#FAEEDA; color:#633806; }
+.btn-outline { background:#fff; color:#841617; border:2px solid #841617; border-radius:10px; padding:10px 14px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; width:100%; margin-top:8px; }
+
+/* Nav tabs */
+.nav { display:flex; background:#fff; border-bottom:1px solid #E5E5EA; }
+.nav-btn { flex:1; padding:12px 4px; font-size:11px; font-weight:600; color:#888; border:none; background:none; cursor:pointer; font-family:inherit; border-bottom:2px solid transparent; }
+.nav-btn.active { color:#841617; border-bottom-color:#841617; }
+
+/* Panels */
+.panel { display:none; padding:14px; }
+.panel.active { display:block; }
+
+/* Section label */
+.section-label { font-size:11px; font-weight:700; color:#841617; text-transform:uppercase; letter-spacing:.07em; margin-bottom:10px; }
+
+/* Booking cards */
+.booking-card { background:#fff; border-radius:12px; padding:14px; margin-bottom:10px; box-shadow:0 1px 6px rgba(132,22,23,0.07); border-left:4px solid #841617; }
+.booking-card.status-confirmed { border-left-color:#1D9E75; }
+.booking-card.status-completed { border-left-color:#888; }
+.booking-card.status-cancelled { border-left-color:#E5E5EA; opacity:.6; }
+.booking-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:6px; }
+.booking-name { font-size:14px; font-weight:700; color:#1a1a1a; }
+.booking-service { font-size:12px; color:#841617; font-weight:600; margin-bottom:3px; }
+.booking-detail { font-size:11px; color:#888; margin-bottom:2px; }
+.booking-actions { display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; }
+.badge { font-size:10px; padding:3px 8px; border-radius:20px; font-weight:600; }
+.badge-pending { background:#FFF3E0; color:#E65100; }
+.badge-confirmed { background:#EAF3DE; color:#27500A; }
+.badge-completed { background:#E6F1FB; color:#0C447C; }
+.badge-cancelled { background:#F5F5F5; color:#888; }
+
+/* Stats */
+.stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px; }
+.stat-card { background:#fff; border-radius:12px; padding:14px; box-shadow:0 1px 6px rgba(132,22,23,0.07); text-align:center; }
+.stat-num { font-size:24px; font-weight:800; color:#841617; }
+.stat-label { font-size:11px; color:#888; margin-top:2px; font-weight:500; }
+
+/* Availability */
+.avail-card { background:#fff; border-radius:12px; padding:14px; margin-bottom:10px; box-shadow:0 1px 6px rgba(132,22,23,0.07); }
+.avail-card h3 { font-size:14px; font-weight:700; margin-bottom:10px; }
+.day-row { display:flex; align-items:center; justify-content:space-between; padding:7px 0; border-bottom:1px solid #F5F0E8; }
+.day-row:last-child { border-bottom:none; }
+.day-name { font-size:13px; font-weight:500; color:#1a1a1a; width:80px; }
+.toggle { width:44px; height:24px; border-radius:12px; background:#E5E5EA; position:relative; cursor:pointer; transition:background .2s; flex-shrink:0; }
+.toggle.on { background:#841617; }
+.toggle-knob { position:absolute; left:2px; top:2px; width:20px; height:20px; border-radius:50%; background:#fff; transition:left .2s; box-shadow:0 1px 3px rgba(0,0,0,0.2); }
+.toggle.on .toggle-knob { left:22px; }
+.slot-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:8px; }
+.slot-chip { padding:7px; border:1.5px solid #E5E5EA; border-radius:8px; text-align:center; font-size:11px; cursor:pointer; font-weight:500; transition:all .15s; }
+.slot-chip.blocked { background:#FCEBEB; border-color:#F09595; color:#791F1F; font-weight:600; }
+.slot-chip.available { background:#EAF3DE; border-color:#97C459; color:#27500A; font-weight:600; }
+
+/* Empty state */
+.empty { text-align:center; padding:32px 16px; color:#888; }
+.empty-icon { font-size:32px; margin-bottom:8px; }
+.empty p { font-size:13px; }
+
+/* Filter row */
+.filter-row { display:flex; gap:6px; margin-bottom:12px; overflow-x:auto; padding-bottom:4px; }
+.filter-btn { padding:6px 12px; border-radius:20px; font-size:11px; font-weight:600; border:1.5px solid #E5E5EA; background:#fff; cursor:pointer; white-space:nowrap; font-family:inherit; }
+.filter-btn.active { background:#841617; color:#fff; border-color:#841617; }
+
+/* Date picker */
+.date-section { background:#fff; border-radius:12px; padding:12px 14px; margin-bottom:12px; box-shadow:0 1px 6px rgba(132,22,23,0.07); }
+
+.error-msg { background:#FCEBEB; color:#791F1F; padding:10px 14px; border-radius:10px; font-size:13px; margin-top:10px; display:none; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <h1>🔧 SQW Admin</h1>
+    <p>Sooner QuickWrench · Management</p>
+  </div>
+
+  <!-- LOGIN -->
+  <div id="login-screen">
+    <div class="login-wrap">
+      <div class="login-card">
+        <h2>Admin Login</h2>
+        <p>Enter your admin password to access bookings.</p>
+        <label>Password</label>
+        <input type="password" id="admin-pass" placeholder="Enter password" onkeydown="if(event.key==='Enter')checkLogin()">
+        <div id="login-err" class="error-msg">Incorrect password. Try again.</div>
+        <button class="btn" onclick="checkLogin()">Sign In</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard" style="display:none">
+    <div class="nav">
+      <button class="nav-btn active" onclick="showTab('tab-bookings',this)">📋 Bookings</button>
+      <button class="nav-btn" onclick="showTab('tab-availability',this)">🗓 Availability</button>
+      <button class="nav-btn" onclick="showTab('tab-stats',this)">📊 Stats</button>
+    </div>
+
+    <!-- BOOKINGS TAB -->
+    <div id="tab-bookings" class="panel active">
+      <div class="filter-row">
+        <button class="filter-btn active" onclick="filterBookings('all',this)">All</button>
+        <button class="filter-btn" onclick="filterBookings('pending',this)">Pending</button>
+        <button class="filter-btn" onclick="filterBookings('confirmed',this)">Confirmed</button>
+        <button class="filter-btn" onclick="filterBookings('completed',this)">Completed</button>
+      </div>
+      <div id="bookings-list">
+        <div class="empty"><div class="empty-icon">⏳</div><p>Loading bookings...</p></div>
+      </div>
+    </div>
+
+    <!-- AVAILABILITY TAB -->
+    <div id="tab-availability" class="panel">
+      <p class="section-label">Block off time slots</p>
+      <div class="date-section">
+        <label>Select a date to manage</label>
+        <input type="date" id="avail-date" onchange="loadAvailability()">
+      </div>
+      <div id="avail-slots">
+        <div class="empty"><div class="empty-icon">📅</div><p>Pick a date above to manage time slots</p></div>
+      </div>
+
+      <div style="margin-top:16px">
+        <p class="section-label">Working days</p>
+        <div class="avail-card">
+          <h3>Weekly Schedule</h3>
+          <div class="day-row">
+            <span class="day-name">Monday</span>
+            <div class="toggle on" id="day-mon" onclick="toggleDay('mon',this)"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="day-row">
+            <span class="day-name">Tuesday</span>
+            <div class="toggle on" id="day-tue" onclick="toggleDay('tue',this)"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="day-row">
+            <span class="day-name">Wednesday</span>
+            <div class="toggle on" id="day-wed" onclick="toggleDay('wed',this)"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="day-row">
+            <span class="day-name">Thursday</span>
+            <div class="toggle on" id="day-thu" onclick="toggleDay('thu',this)"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="day-row">
+            <span class="day-name">Friday</span>
+            <div class="toggle on" id="day-fri" onclick="toggleDay('fri',this)"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="day-row">
+            <span class="day-name">Saturday</span>
+            <div class="toggle" id="day-sat" onclick="toggleDay('sat',this)"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="day-row">
+            <span class="day-name">Sunday</span>
+            <div class="toggle" id="day-sun" onclick="toggleDay('sun',this)"><div class="toggle-knob"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS TAB -->
+    <div id="tab-stats" class="panel">
+      <p class="section-label">Overview</p>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-num" id="stat-total">—</div><div class="stat-label">Total Bookings</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-pending">—</div><div class="stat-label">Pending</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-confirmed">—</div><div class="stat-label">Confirmed</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-revenue">—</div><div class="stat-label">Est. Revenue</div></div>
+      </div>
+      <p class="section-label">Recent customers</p>
+      <div id="recent-customers">
+        <div class="empty"><div class="empty-icon">👤</div><p>Loading...</p></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ================================================================
+// CONFIG — same keys as your index.html
+// ================================================================
+var SUPA_URL = 'https://fxoecspucgwlzdahhief.supabase.co'
+var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4b2Vjc3B1Y2d3bHpkYWhoaWVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2OTUzMjQsImV4cCI6MjA5MzI3MTMyNH0._S84GxGXmh1QCAiwbgIemGeRKK2NgA-bOzUyWPGt_3g'
+var ADMIN_PASSWORD = 'sqwadmin2024'
+// ↑ Change this to your own password before deploying!
+// ================================================================
+
+var db = supabase.createClient(SUPA_URL, SUPA_KEY)
+
+var allBookings = []
+var blockedSlots = {}
+var currentFilter = 'all'
+var workingDays = { mon:true, tue:true, wed:true, thu:true, fri:true, sat:false, sun:false }
+
+var ALL_SLOTS = ['08:00','09:00','10:00','11:00','13:00','14:00','15:00','16:00']
+var SLOT_LABELS = { '08:00':'8:00 AM','09:00':'9:00 AM','10:00':'10:00 AM','11:00':'11:00 AM','13:00':'1:00 PM','14:00':'2:00 PM','15:00':'3:00 PM','16:00':'4:00 PM' }
+
+// ── Login ──
+function checkLogin() {
+  var pass = document.getElementById('admin-pass').value
+  if (pass === ADMIN_PASSWORD) {
+    document.getElementById('login-screen').style.display = 'none'
+    document.getElementById('dashboard').style.display = 'block'
+    loadBookings()
+    loadStats()
+  } else {
+    document.getElementById('login-err').style.display = 'block'
+  }
+}
+
+// ── Tab nav ──
+function showTab(id, btn) {
+  document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active') })
+  document.querySelectorAll('.nav-btn').forEach(function(b) { b.classList.remove('active') })
+  document.getElementById(id).classList.add('active')
+  btn.classList.add('active')
+}
+
+// ── Load bookings ──
+async function loadBookings() {
+  var result = await db
+    .from('bookings')
+    .select('*, customers(name, email, phone)')
+    .order('scheduled_at', { ascending: true })
+
+  if (result.error) {
+    document.getElementById('bookings-list').innerHTML =
+      '<div class="empty"><p>Error loading bookings: ' + result.error.message + '</p></div>'
+    return
+  }
+
+  allBookings = result.data || []
+  renderBookings(currentFilter)
+}
+
+function renderBookings(filter) {
+  currentFilter = filter
+  var list = document.getElementById('bookings-list')
+  var filtered = allBookings.filter(function(b) {
+    return filter === 'all' || b.status === filter
+  })
+
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="empty"><div class="empty-icon">📋</div><p>No ' + filter + ' bookings</p></div>'
+    return
+  }
+
+  list.innerHTML = filtered.map(function(b) {
+    var customer = b.customers || {}
+    var dt = b.scheduled_at ? new Date(b.scheduled_at) : null
+    var dateStr = dt ? dt.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' }) : 'No date'
+    var timeStr = dt ? dt.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' }) : ''
+    var badgeClass = 'badge-' + (b.status || 'pending')
+    var cardClass  = 'booking-card status-' + (b.status || 'pending')
+
+    return '<div class="' + cardClass + '" id="booking-' + b.id + '">' +
+      '<div class="booking-top">' +
+        '<div>' +
+          '<div class="booking-name">' + (customer.name || 'Unknown') + '</div>' +
+          '<div class="booking-service">' + (b.notes ? b.notes.split('\n')[0] : 'Service booking') + '</div>' +
+        '</div>' +
+        '<span class="badge ' + badgeClass + '">' + (b.status || 'pending') + '</span>' +
+      '</div>' +
+      '<div class="booking-detail">📅 ' + dateStr + ' at ' + timeStr + '</div>' +
+      '<div class="booking-detail">📍 ' + (b.address || 'No address') + '</div>' +
+      '<div class="booking-detail">📞 ' + (customer.phone || 'No phone') + '</div>' +
+      '<div class="booking-detail">💰 $' + (b.total_amount || 0) + ' total</div>' +
+      (b.notes ? '<div class="booking-detail" style="margin-top:4px;color:#666;font-style:italic">📝 ' + b.notes + '</div>' : '') +
+      '<div class="booking-actions">' +
+        (b.status === 'pending' ? '<button class="btn-sm btn-green" onclick="updateStatus(\'' + b.id + '\',\'confirmed\')">✓ Confirm</button>' : '') +
+        (b.status !== 'completed' && b.status !== 'cancelled' ? '<button class="btn-sm btn-amber" onclick="updateStatus(\'' + b.id + '\',\'completed\')">✓ Complete</button>' : '') +
+        '<button class="btn-sm" style="background:#F5F0E8;color:#841617" onclick="callCustomer(\'' + (customer.phone||'') + '\')">📞 Call</button>' +
+        (b.status !== 'cancelled' ? '<button class="btn-sm btn-red" onclick="updateStatus(\'' + b.id + '\',\'cancelled\')">✗ Cancel</button>' : '') +
+      '</div>' +
+    '</div>'
+  }).join('')
+}
+
+function filterBookings(filter, btn) {
+  document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active') })
+  btn.classList.add('active')
+  renderBookings(filter)
+}
+
+async function updateStatus(id, status) {
+  var result = await db.from('bookings').update({ status: status }).eq('id', id)
+  if (!result.error) {
+    var b = allBookings.find(function(x) { return x.id === id })
+    if (b) b.status = status
+    renderBookings(currentFilter)
+  }
+}
+
+function callCustomer(phone) {
+  if (phone) window.location.href = 'tel:' + phone.replace(/\D/g,'')
+}
+
+// ── Availability ──
+async function loadAvailability() {
+  var date = document.getElementById('avail-date').value
+  if (!date) return
+
+  var container = document.getElementById('avail-slots')
+  container.innerHTML = '<div class="empty"><p>Loading...</p></div>'
+
+  // Get bookings for this date
+  var result = await db
+    .from('bookings')
+    .select('scheduled_at, status')
+    .gte('scheduled_at', date + 'T00:00:00')
+    .lte('scheduled_at', date + 'T23:59:59')
+    .neq('status', 'cancelled')
+
+  var bookedTimes = (result.data || []).map(function(b) {
+    return new Date(b.scheduled_at).toTimeString().slice(0,5)
+  })
+
+  var blocked = blockedSlots[date] || []
+
+  container.innerHTML =
+    '<div class="avail-card">' +
+      '<h3>Time slots for ' + new Date(date + 'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}) + '</h3>' +
+      '<p style="font-size:11px;color:#888;margin-bottom:10px">Tap a slot to block/unblock it. Red = blocked, Green = available, Grey = already booked.</p>' +
+      '<div class="slot-grid">' +
+        ALL_SLOTS.map(function(slot) {
+          var isBooked  = bookedTimes.includes(slot)
+          var isBlocked = blocked.includes(slot)
+          var cls = isBooked ? 'slot-chip' : (isBlocked ? 'slot-chip blocked' : 'slot-chip available')
+          var onclick = isBooked ? '' : 'onclick="toggleSlot(\'' + date + '\',\'' + slot + '\')"'
+          var label = SLOT_LABELS[slot] + (isBooked ? ' 📌' : (isBlocked ? ' 🔒' : ' ✓'))
+          return '<div class="' + cls + '" ' + onclick + ' style="' + (isBooked ? 'opacity:.5;cursor:not-allowed' : '') + '">' + label + '</div>'
+        }).join('') +
+      '</div>' +
+    '</div>'
+}
+
+function toggleSlot(date, slot) {
+  if (!blockedSlots[date]) blockedSlots[date] = []
+  var idx = blockedSlots[date].indexOf(slot)
+  if (idx > -1) {
+    blockedSlots[date].splice(idx, 1)
+  } else {
+    blockedSlots[date].push(slot)
+  }
+  saveAvailability(date)
+  loadAvailability()
+}
+
+async function saveAvailability(date) {
+  // Store blocked slots in a local_availability table
+  // For now saves to Supabase bookings with status='blocked'
+  // First remove any existing blocked entries for this date
+  await db.from('bookings')
+    .delete()
+    .gte('scheduled_at', date + 'T00:00:00')
+    .lte('scheduled_at', date + 'T23:59:59')
+    .eq('status', 'blocked')
+
+  // Insert new blocked slots
+  var slots = blockedSlots[date] || []
+  if (slots.length > 0) {
+    var rows = slots.map(function(slot) {
+      return { scheduled_at: date + 'T' + slot + ':00', status: 'blocked', total_amount: 0 }
+    })
+    await db.from('bookings').insert(rows)
+  }
+}
+
+function toggleDay(day, el) {
+  workingDays[day] = !workingDays[day]
+  el.classList.toggle('on')
+}
+
+// ── Stats ──
+async function loadStats() {
+  var result = await db.from('bookings').select('status, total_amount, customer_id, customers(name, email, phone)').order('created_at', { ascending: false })
+  if (result.error || !result.data) return
+
+  var bookings = result.data
+  var total     = bookings.length
+  var pending   = bookings.filter(function(b) { return b.status === 'pending' }).length
+  var confirmed = bookings.filter(function(b) { return b.status === 'confirmed' }).length
+  var revenue   = bookings
+    .filter(function(b) { return b.status === 'completed' })
+    .reduce(function(sum, b) { return sum + (b.total_amount || 0) }, 0)
+
+  document.getElementById('stat-total').textContent     = total
+  document.getElementById('stat-pending').textContent   = pending
+  document.getElementById('stat-confirmed').textContent = confirmed
+  document.getElementById('stat-revenue').textContent   = '$' + revenue
+
+  // Recent customers (deduplicated)
+  var seen = {}
+  var customers = []
+  bookings.forEach(function(b) {
+    if (b.customers && !seen[b.customers.email]) {
+      seen[b.customers.email] = true
+      customers.push(b.customers)
+    }
+  })
+
+  var html = document.getElementById('recent-customers')
+  if (customers.length === 0) {
+    html.innerHTML = '<div class="empty"><div class="empty-icon">👤</div><p>No customers yet</p></div>'
+    return
+  }
+  html.innerHTML = customers.slice(0,10).map(function(c) {
+    return '<div style="background:#fff;border-radius:10px;padding:12px 14px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,0.05);display:flex;align-items:center;justify-content:space-between">' +
+      '<div>' +
+        '<div style="font-size:13px;font-weight:600;color:#1a1a1a">' + (c.name||'Unknown') + '</div>' +
+        '<div style="font-size:11px;color:#888">' + (c.email||'') + '</div>' +
+      '</div>' +
+      '<a href="tel:' + (c.phone||'').replace(/\D/g,'') + '" style="background:#F5F0E8;color:#841617;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:600;text-decoration:none">📞 Call</a>' +
+    '</div>'
+  }).join('')
+}
+</script>
+</body>
+</html>

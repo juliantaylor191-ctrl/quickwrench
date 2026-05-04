@@ -260,25 +260,39 @@ textarea { height:80px; resize:none; }
   </div>
 
   <!-- SCREEN 4: Schedule -->
+  <!-- ================================================================
+REPLACE your entire s-schedule screen div with this updated version.
+Search for: <div id="s-schedule" class="screen">
+Select everything from that line to its closing </div>
+and replace with this.
+================================================================ -->
+
   <div id="s-schedule" class="screen">
     <button class="btn-back" onclick="goTo('s-info')">← Back</button>
     <div class="steps"><div class="step-dot done"></div><div class="step-dot done"></div><div class="step-dot"></div></div>
     <h2 style="font-size:16px;font-weight:700;margin-bottom:14px;color:#1a1a1a">Pick a date &amp; time</h2>
-    <label>Date</label><input id="fdate" type="date">
+
+    <label>Date</label>
+    <input id="fdate" type="date" onchange="loadTimeSlots()">
+    <!-- ↑ onchange="loadTimeSlots()" is the key addition -->
+
     <label>Available times</label>
+    <div id="slots-loading" style="display:none;font-size:12px;color:#888;padding:8px 0">Checking availability...</div>
     <div class="time-grid">
-      <div class="time-slot" onclick="selectTime(this,'08:00')">8:00 AM</div>
-      <div class="time-slot" onclick="selectTime(this,'09:00')">9:00 AM</div>
-      <div class="time-slot" onclick="selectTime(this,'10:00')">10:00 AM</div>
-      <div class="time-slot" onclick="selectTime(this,'11:00')">11:00 AM</div>
-      <div class="time-slot" onclick="selectTime(this,'13:00')">1:00 PM</div>
-      <div class="time-slot" onclick="selectTime(this,'14:00')">2:00 PM</div>
-      <div class="time-slot" onclick="selectTime(this,'15:00')">3:00 PM</div>
-      <div class="time-slot" onclick="selectTime(this,'16:00')">4:00 PM</div>
+      <div class="time-slot" data-time="08:00" onclick="selectTime(this,'08:00')">8:00 AM</div>
+      <div class="time-slot" data-time="09:00" onclick="selectTime(this,'09:00')">9:00 AM</div>
+      <div class="time-slot" data-time="10:00" onclick="selectTime(this,'10:00')">10:00 AM</div>
+      <div class="time-slot" data-time="11:00" onclick="selectTime(this,'11:00')">11:00 AM</div>
+      <div class="time-slot" data-time="13:00" onclick="selectTime(this,'13:00')">1:00 PM</div>
+      <div class="time-slot" data-time="14:00" onclick="selectTime(this,'14:00')">2:00 PM</div>
+      <div class="time-slot" data-time="15:00" onclick="selectTime(this,'15:00')">3:00 PM</div>
+      <div class="time-slot" data-time="16:00" onclick="selectTime(this,'16:00')">4:00 PM</div>
     </div>
+
     <div id="err-sched" class="error-msg">Please pick a date and time.</div>
     <button class="btn" onclick="goToPayment()">Continue to Payment →</button>
   </div>
+   
 
   <!-- SCREEN 5: Payment -->
   <div id="s-payment" class="screen">
@@ -444,10 +458,78 @@ function goToSchedule() {
 }
 
 // ── Step 3: time slot ──
+async function loadTimeSlots() {
+  var date = document.getElementById('fdate').value
+  if (!date) return
+ 
+  var slots = document.querySelectorAll('.time-slot')
+  
+  // Reset all slots first
+  slots.forEach(function(s) {
+    s.classList.remove('selected', 'taken')
+    s.style.opacity = '1'
+    s.style.cursor  = 'pointer'
+    s.style.textDecoration = 'none'
+  })
+ 
+  // Show loading state
+  slots.forEach(function(s) { s.style.opacity = '0.4' })
+ 
+  // Fetch booked AND blocked slots for this date
+  var result = await db
+    .from('bookings')
+    .select('scheduled_at, status')
+    .gte('scheduled_at', date + 'T00:00:00')
+    .lte('scheduled_at', date + 'T23:59:59')
+    .neq('status', 'cancelled')
+ 
+  // Reset opacity
+  slots.forEach(function(s) { s.style.opacity = '1' })
+ 
+  if (result.error) return
+ 
+  // Build list of taken times (booked or blocked)
+  var takenTimes = (result.data || []).map(function(b) {
+    return new Date(b.scheduled_at).toTimeString().slice(0, 5)
+  })
+ 
+  // Mark taken slots
+  slots.forEach(function(slot) {
+    var slotTime = slot.getAttribute('data-time')
+    if (takenTimes.includes(slotTime)) {
+      slot.classList.add('taken')
+      slot.textContent = slot.textContent.split(' ')[0] + ' ' +
+                         (slot.textContent.split(' ')[1] || '') + ' — Taken'
+      slot.style.opacity      = '0.4'
+      slot.style.cursor       = 'not-allowed'
+      slot.style.background   = '#F5F5F5'
+      slot.style.borderColor  = '#E5E5EA'
+      slot.style.color        = '#999'
+    }
+  })
+ 
+  // Reset state time if previously selected slot is now taken
+  if (state.time && takenTimes.includes(state.time)) {
+    state.time = ''
+  }
+}
+// ================================================================
+// REPLACE your existing selectTime function with this version.
+// Search for: function selectTime(el, time)
+// Replace the whole function with this.
+// ================================================================
+
 function selectTime(el, time) {
-  document.querySelectorAll('.time-slot').forEach(function(s) { s.classList.remove('selected') })
+  // Don't allow selecting a taken slot
+  if (el.classList.contains('taken')) return
+
+  document.querySelectorAll('.time-slot').forEach(function(s) {
+    s.classList.remove('selected')
+  })
   el.classList.add('selected')
   state.time = time
+  document.getElementById('err-sched').style.display = 'none'
+}
 }
 
 function goToPayment() {
